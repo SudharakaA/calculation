@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculation Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+
+        .navbar {
+            background-color: #122547;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px;
+        }
+
+        .tax-categories {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 30%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+        }
+
+        .tax-category {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .tax-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .tax-category span {
+            font-weight: bold;
+            font-size: 24px;
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+
+        .tax-category p {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .tax-category button {
+            background-color: #ff4d4d;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tax-category button:hover {
+            background-color: #e60000;
+        }
+
+        .calculation-form {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 50%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .calculation-form h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .form-group button {
+            width: 100%;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .form-group button:hover {
+            background-color: #218838;
+        }
+
+        .download-section {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .download-section a {
+            text-decoration: none;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: #122547;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 30px;
+        }
+
+        /* Profile section styles */
+        .profile-section {
+            text-align: right;
+            margin: 20px;
+        }
+        .profile-section a {
+            text-decoration: none;
+            color: #007BFF;
+            cursor: pointer;
+        }
+        .profile-section a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="navbar">
+      
+   
+            <div class="taxgen__navbar-links_logo">
+                <img src="data:image/png;base64,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" alt="logo" class="logo"></div>
+            <nav class="nav-links">
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Calculate</a>
+                <a href="#">Services</a>
+                <a href="#">Contact Us</a>
+            
+        </nav>
+        <div class="user-profile">
+            <span id="profile-link">S.D.K.Perera</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Tax Categories -->
+        <div class="tax-categories">
+            <div class="tax-category">
+                <span>40%</span>
+                <p>Conducting betting and gaming</p>
+                <button>X</button>
+            </div>
+            <div class="tax-category">
+                <span>40%</span>
+                <p>Manufacture and sale or import and sale of any liquor or tobacco products</p>
+                <button>X</button>
+            </div>
+            <div class="tax-category">
+                <span>30%</span>
+                <p>Realization of investment assets</p>
+                <button>X</button>
+            </div>
+        </div>
+
+        <!-- Calculation Form -->
+        <div class="calculation-form">
+            <h2>Business Tax Calculation</h2>
+            <form id="tax-form">
+                <div class="form-group">
+                    <label for="business-name">Business Name:</label>
+                    <input type="text" id="business-name" placeholder="Enter business name">
+                </div>
+                <div class="form-group">
+                    <label for="registration-number">Registration Number:</label>
+                    <input type="text" id="registration-number" placeholder="Enter registration number">
+                </div>
+                <div class="form-group">
+                    <label for="business-type">Business Type:</label>
+                    <select id="business-type">
+                        <option value="betting-gaming">Conducting Betting And Gaming</option>
+                        <option value="liquor-tobacco">Manufacture and sale or import and sale of any liquor or tobacco products</option>
+                        <option value="investment-assets">Realization of investment assets</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="income">Total Business Income (LKR):</label>
+                    <input type="number" id="income" placeholder="Enter total income">
+                </div>
+                <div class="form-group">
+                    <label for="deductions">Total Deductible Expenses (LKR):</label>
+                    <input type="number" id="deductions" placeholder="Enter deductible expenses">
+                </div>
+                <div class="form-group">
+                    <label for="other-deductions">Other Deductions (LKR):</label>
+                    <input type="number" id="other-deductions" placeholder="Enter other deductions">
+                </div>
+                <div class="form-group">
+                    <label for="tax-year">Tax Year:</label>
+                    <select id="tax-year">
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="vat-registered">VAT Registered:</label>
+                    <select id="vat-registered">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="additional-info">Additional Information (Optional):</label>
+                    <textarea id="additional-info" rows="3" placeholder="Enter any additional info"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Calculate Tax</button>
+                </div>
+            </form>
+
+            <div class="download-section">
+                <a id="download-link">Download: Check Other Industry Taxation Rates</a>
+            </div>
+            <div id="tax-result" style="margin-top: 20px; font-weight: bold;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 TaxGen. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Profile</h2>
+            <form id="profile-form">
+                <div class="form-group">
+                    <label for="profile-name">Name:</label>
+                    <input type="text" id="profile-name" value="S.D.K.Perera">
+                </div>
+                <div class="form-group">
+                    <label for="profile-email">Email:</label>
+                    <input type="email" id="profile-email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <button type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("profile-modal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("profile-link");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal 
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Handle profile form submission
+        document.getElementById("profile-form").onsubmit = function(event) {
+            event.preventDefault();
+            var name = document.getElementById("profile-name").value;
+            var email = document.getElementById("profile-email").value;
+            // Update the profile link text
+            btn.textContent = name;
+            // Close the modal
+            modal.style.display = "none";
+            // Optionally, you can save the profile data to a server here
+        }
+
+        // Handle tax form submission
+        document.getElementById("tax-form").onsubmit = function(event) {
+            event.preventDefault();
+            var income = parseFloat(document.getElementById("income").value) || 0;
+            var deductions = parseFloat(document.getElementById("deductions").value) || 0;
+            var otherDeductions = parseFloat(document.getElementById("other-deductions").value) || 0;
+            var businessType = document.getElementById("business-type").value;
+            var taxRate;
+
+            // Determine the tax rate based on business type
+            if (businessType === "betting-gaming" || businessType === "liquor-tobacco") {
+                taxRate = 0.4;
+            } else if (businessType === "investment-assets") {
+                taxRate = 0.3;
+            } else {
+                taxRate = 0.3; // Default tax rate
+            }
+
+            var taxableIncome = income - deductions - otherDeductions;
+            var tax = taxableIncome * taxRate;
+            document.getElementById("tax-result").textContent = "Calculated Tax: LKR " + tax.toFixed(2);
+        }
+
+        // Handle PDF download
+        document.getElementById("download-link").onclick = function() {
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF();
+
+            var businessName = document.getElementById("business-name").value;
+            var registrationNumber = document.getElementById("registration-number").value;
+            var businessType = document.getElementById("business-type").value;
+            var income = document.getElementById("income").value;
+            var deductions = document.getElementById("deductions").value;
+            var otherDeductions = document.getElementById("other-deductions").value;
+            var taxYear = document.getElementById("tax-year").value;
+            var vatRegistered = document.getElementById("vat-registered").value;
+            var additionalInfo = document.getElementById("additional-info").value;
+            var taxResult = document.getElementById("tax-result").textContent;
+
+            doc.text("Business Tax Calculation", 10, 10);
+            doc.text("Business Name: " + businessName, 10, 20);
+            doc.text("Registration Number: " + registrationNumber, 10, 30);
+            doc.text("Business Type: " + businessType, 10, 40);
+            doc.text("Total Business Income (LKR): " + income, 10, 50);
+            doc.text("Total Deductible Expenses (LKR): " + deductions, 10, 60);
+            doc.text("Other Deductions (LKR): " + otherDeductions, 10, 70);
+            doc.text("Tax Year: " + taxYear, 10, 80);
+            doc.text("VAT Registered: " + vatRegistered, 10, 90);
+            doc.text("Additional Information: " + additionalInfo, 10, 100);
+            doc.text(taxResult, 10, 110);
+
+            doc.save("tax_calculation.pdf");
+        }
+    </script>
+</body>
+</html>
