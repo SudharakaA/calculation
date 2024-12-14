@@ -1,46 +1,56 @@
 <?php
-// Database connection credentials
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "Final";
+// Start the session
+session_start();
 
-try {
-    // Create connection
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Database connection
+$servername = "localhost"; // Replace with your DB host
+$username = "root"; // Replace with your DB username
+$password = ""; // Replace with your DB password
+$dbname = "final"; // Replace with your DB name
 
-    if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        // Get email and password from POST request
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-        // Check if fields are empty
-        if (empty($email) || empty($password)) {
-            echo json_encode(["status" => "error", "message" => "Email and password are required."]);
-            exit;
-        }
-
-        // Hash the password for security
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // Insert data into the database
-        $sql = "INSERT INTO users (email, password) VALUES (:email, :password)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $hashedPassword);
-
-        if ($stmt->execute()) {
-            echo json_encode(["status" => "success", "message" => "User registered successfully."]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Failed to register user."]);
-        }
-    } else {
-        echo json_encode(["status" => "error", "message" => "Invalid request method."]);
-    }
-} catch (PDOException $e) {
-    echo json_encode(["status" => "error", "message" => "Database connection failed: " . $e->getMessage()]);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-$conn = null;
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+
+    // Query to check user credentials
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Fetch the user data
+        $user = $result->fetch_assoc();
+
+        // Verify password
+        if (password_verify($password, $user['password'])) {
+            // Set session variables for the user
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['email'] = $user['email'];
+
+            // Redirect to the dashboard
+            header("Location: dashboard.html");
+            exit();
+        } else {
+            // Incorrect password
+            echo "Invalid credentials.";
+        }
+    } else {
+        // User not found
+        echo "No user found with that email.";
+    }
+
+    // Close the connection
+    $stmt->close();
+    $conn->close();
+}
 ?>
