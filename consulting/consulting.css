@@ -1,145 +1,214 @@
+/* General Body Styling */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #ebd8d8;
+  color: #f0f0f0;
+}
 
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #053f90;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(38, 32, 86, 0.3);
+}
 
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #0b2c52;
-      padding: 10px 20px;
-      color: white;
-    }
+.navbar-logo img {
+  border-radius: 5px;
+}
 
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-      margin: 0;
-    }
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+}
 
-    .navbar ul li a {
-      text-decoration: none;
-      color: white;
-    }
+.navbar-links li a {
+  text-decoration: none;
+  color: #93b4ff;
+  font-weight: bold;
+  transition: color 0.3s;
+}
 
-    .auth-buttons button {
-      margin-left: 10px;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+.navbar-links li a:hover {
+  color: #1d4ed8;
+}
 
-    .auth-buttons .login {
-      background-color: #536dfe;
-      color: white;
-    }
+.auth-buttons button {
+  margin-left: 10px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
 
-    .auth-buttons .signup {
-      background-color: #2d2d2d;
-      color: white;
-    }
+.auth-buttons .login {
+  background-color: #1d4ed8;
+  color: white;
+}
 
-    .tax-consulting {
-      padding: 20px;
-      background-color: #f5f5f5;
-      flex: 1;
-    }
+.auth-buttons .signup {
+  background-color: #2563eb;
+  color: white;
+}
 
-    .advisor-profile {
-      display: flex;
-      align-items: center;
-      background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 10px;
-      margin: 10px 0;
-      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    }
+.auth-buttons button:hover {
+  opacity: 0.9;
+}
 
-    .advisor-profile img {
-      border-radius: 50%;
-      margin-right: 20px;
-    }
+/* Tax Consulting Section */
+.tax-consulting {
+  padding: 20px;
+  background-color: #1e293b;
+  flex: 1;
+  color: #e2e8f0;
+  text-align: center;
+}
 
-    .advisor-profile button {
-      margin-left: auto;
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+/* Advisor Cards */
+.advisor-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
 
-    .advisor-profile button:hover {
-      background-color: #45a049;
-    }
+.advisor-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #1f2937;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 15px;
+  width: 250px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
 
-    .popup-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 99;
-    }
+.advisor-profile img {
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
 
-    .popup-form {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-      z-index: 100;
-    }
+.advisor-profile:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+}
 
-    .popup-form h2 {
-      margin-top: 0;
-    }
+.advisor-profile button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-    .popup-form p {
-      margin: 10px 0;
-    }
+.advisor-profile button:hover {
+  background-color: #1d4ed8;
+}
 
-    .popup-form button {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+/* Popup Overlay */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 99;
+}
 
-    .popup-form button:hover {
-      background-color: #45a049;
-    }
-    
-    footer {
-      background-color: #0b2c52;
-      color: white;
-      text-align: center;
-      padding: 15px 0;
-    }
+/* Popup Form */
+.popup-form {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #1f2937;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  width: 90%;
+  max-width: 400px;
+  max-height: 90vh; /* Ensure popup is scrollable if it overflows */
+  overflow-y: auto;
+}
 
-    footer a {
-      color: #93b4ff;
-      text-decoration: none;
-      font-weight: bold;
-    }
+.popup-form h2 {
+  margin-top: 0;
+  color: #93b4ff;
+  text-align: center;
+}
 
-    footer a:hover {
-      text-decoration: underline;
-    }
+.popup-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.popup-form label {
+  font-weight: bold;
+  color: #e2e8f0;
+}
+
+.popup-form input,
+.popup-form textarea,
+.popup-form button {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #334155;
+  border-radius: 5px;
+  background-color: #1e293b;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.popup-form textarea {
+  resize: none;
+}
+
+.popup-form button {
+  background-color: #2563eb;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+
+.popup-form button:hover {
+  background-color: #1d4ed8;
+}
+
+.popup-form .close-btn {
+  background-color: #e11d48;
+  margin-top: 10px;
+}
+
+.popup-form .close-btn:hover {
+  background-color: #be123c;
+}
+
+/* Footer */
+footer {
+  background-color: #03275a;
+  color: #93b4ff;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 14px;
+}
