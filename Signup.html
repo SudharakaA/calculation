@@ -6,6 +6,21 @@
   <title>Update Profile</title>
 
   <script>
+    // Email validation
+    function validateEmail() {
+        const email = document.getElementById('email').value;
+        const emailMessage = document.getElementById('emailMessage');
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+        if (!emailPattern.test(email)) {
+          emailMessage.textContent = "Please enter a valid email address.";
+          return false;
+        }
+
+        emailMessage.textContent = "";
+        return true;
+    }
+
     // Restrict input to letters only for First Name and Last Name
     function validateNameInput(event) {
       const char = String.fromCharCode(event.which);
@@ -13,7 +28,7 @@
         event.preventDefault();
       }
     }
-  
+
     // Restrict input to digits only for Mobile Number
     function validateMobileInput(event) {
       const char = String.fromCharCode(event.which);
@@ -21,39 +36,42 @@
         event.preventDefault();
       }
     }
-  
+
     // Password validation
     function validatePassword() {
       const password = document.getElementById('password').value;
       const rePassword = document.getElementById('rePassword').value;
       const passwordMessage = document.getElementById('passwordMessage');
-  
+
       // Check if password meets criteria
       const isValid = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/.test(password);
       if (!isValid) {
         passwordMessage.textContent = "Password must be at least 6 characters long and include letters, numbers, and symbols.";
         return false;
       }
-  
+
       // Check if passwords match
       if (password !== rePassword) {
         passwordMessage.textContent = "Passwords do not match.";
         return false;
       }
-  
+
       passwordMessage.textContent = "";
       return true;
     }
-  
+
     // Attach validation to input fields
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('firstName').addEventListener('keypress', validateNameInput);
       document.getElementById('lastName').addEventListener('keypress', validateNameInput);
       document.getElementById('mobile').addEventListener('keypress', validateMobileInput);
-  
+
+      // Validate email on blur
+      document.getElementById('email').addEventListener('blur', validateEmail);
+
       // Validate password on form submission
       document.querySelector('.update-form').addEventListener('submit', (event) => {
-        if (!validatePassword()) {
+        if (!validatePassword() || !validateEmail()) {
           event.preventDefault();
         }
       });
@@ -208,8 +226,7 @@
       </ul>
     </nav>
     <div class="auth-buttons">
-      <button class="login">Login</button>
-      <button class="signup">Sign Up</button>
+      <button class="login" href="./Login.html">Login</button>
     </div>
   </header>
 
@@ -258,16 +275,21 @@
       </div>
 
       <div class="form-group">
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="email" placeholder="Enter Your Email Address" required>
+        <span id="emailMessage" style="color: red; font-size: 0.9em;"></span>
+      </div>
+      
+      <div class="form-group">
         <label for="password">Password *</label>
         <input type="password" id="password" name="password" placeholder="Enter Your Password" required>
       </div>
-      
+        
       <div class="form-group">
         <label for="rePassword">Re-enter Password *</label>
         <input type="password" id="rePassword" name="re_password" placeholder="Re-enter Your Password" required>
         <span id="passwordMessage" style="color: red; font-size: 0.9em;"></span>
       </div>
-      
 
       <button type="submit" class="save-button">Save</button>
     </form>
