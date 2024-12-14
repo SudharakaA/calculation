@@ -17,40 +17,37 @@ if ($conn->connect_error) {
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-
-    // Query to check user credentials
-    $sql = "SELECT * FROM users WHERE email = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        // Fetch the user data
-        $user = $result->fetch_assoc();
-
-        // Verify password
-        if (password_verify($password, $user['password'])) {
-            // Set session variables for the user
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['email'] = $user['email'];
-
-            // Redirect to the dashboard
-            header("Location: dashboard.html");
-            exit();
+        $email = trim($_POST['email']);
+        $password = trim($_POST['password']);
+        
+        // Query to check if the email exists
+        $sql = "SELECT * FROM users WHERE email = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            // User found, check the password
+            $user = $result->fetch_assoc();
+            
+            // Verify the password
+            if (password_verify($password, $user['password'])) {
+                // Credentials are correct, redirect to the dashboard or another page
+                $_SESSION['user_id'] = $user['id']; // Store user ID in session
+                header("Location: dashboard.html"); // Redirect to the dashboard
+                exit();
+            } else {
+                // Password is incorrect
+                $_SESSION['error'] = "Recheck the email and the password.";
+                header("Location: userlogin.php"); // Redirect back to login page
+                exit();
+            }
         } else {
-            // Incorrect password
-            echo "Invalid credentials.";
+            // Email does not exist
+            $_SESSION['error'] = "Recheck the email and the password.";
+            header("Location: userlogin.php"); // Redirect back to login page
+            exit();
         }
-    } else {
-        // User not found
-        echo "No user found with that email.";
     }
-
-    // Close the connection
-    $stmt->close();
-    $conn->close();
-}
 ?>
