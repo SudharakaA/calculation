@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./consulting.css">
+  <link rel="stylesheet" href="consulting.css" />
   <title>Tax Consulting</title>
 </head>
 <body>
   <!-- Navbar -->
   <div class="navbar">
-    <div class="taxgen__navbar-links_logo">
+    <div class="navbar-logo">
       <img src="https://via.placeholder.com/100" alt="TaxGen Logo" height="50" />
     </div>
-    <ul>
+    <ul class="navbar-links">
       <li><a href="#">Home</a></li>
       <li><a href="#">About</a></li>
       <li><a href="#">Services</a></li>
@@ -20,18 +20,18 @@
       <li><a href="#">Contact Us</a></li>
     </ul>
     <div class="auth-buttons">
-      <button class="login">Login</button>
-      <button class="signup">Sign Up</button>
+      <a></a>
+      <a></a>
     </div>
   </div>
 
   <!-- Tax Consulting Section -->
   <div class="tax-consulting">
     <h1>Meet Our Tax Advisors</h1>
-    <div id="advisorCards"></div>
+    <div id="advisorCards" class="advisor-cards"></div>
     <div class="pagination">
-      <button id="prevBtn" onclick="changePage(-1)">Previous</button>
-      <button id="nextBtn" onclick="changePage(1)">Next</button>
+      <button id="prevBtn" onclick="changePage(-1)"><</button>
+      <button id="nextBtn" onclick="changePage(1)">></button>
     </div>
   </div>
 
@@ -40,33 +40,38 @@
   <div class="popup-form" id="popupForm">
     <h2>Contact Advisor</h2>
     <form id="contactForm">
-      <input type="hidden" id="advisorId" name="advisorId">
-      <input type="hidden" id="advisorName" name="advisorName">
+      <input type="hidden" id="advisorId" name="advisorId" />
+      <input type="hidden" id="advisorName" name="advisorName" />
       <label for="clientName">Client Name:</label>
-      <input type="text" id="clientName" name="clientName" required>
+      <input type="text" id="clientName" name="clientName" required />
       <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
+      <input type="email" id="email" name="email" required />
       <label for="mobile">Mobile No:</label>
-      <input type="text" id="mobile" name="mobile" required>
+      <input type="text" id="mobile" name="mobile" required />
       <label for="faxNo">Fax No:</label>
-      <input type="text" id="faxNo" name="faxNo">
+      <input type="text" id="faxNo" name="faxNo" />
       <label for="landLine">Land Line:</label>
-      <input type="text" id="landLine" name="landLine">
+      <input type="text" id="landLine" name="landLine" />
       <label for="organization">Organization:</label>
-      <input type="text" id="organization" name="organization">
+      <input type="text" id="organization" name="organization" />
       <label for="occupation">Occupation:</label>
-      <input type="text" id="occupation" name="occupation">
+      <input type="text" id="occupation" name="occupation" />
       <label for="message">Message:</label>
       <textarea id="message" name="message" rows="4" required></textarea>
       <button type="submit">Send</button>
+      <button type="button" class="close-btn" onclick="closeForm()">Close</button>
     </form>
-    <button type="button" onclick="closeForm()">Close</button>
   </div>
 
   <!-- Footer -->
   <footer>
     <p>TaxGen is an innovative tax management solution. All rights reserved © 2024</p>
   </footer>
+
+  <script src="consulting.js"></script>
+</body>
+</html>
+
 
   <script>
     let currentPage = 1;
