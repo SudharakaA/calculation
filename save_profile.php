@@ -24,8 +24,21 @@ $nic = sanitize($_POST['nic']);
 $mobile = sanitize($_POST['mobile']);
 $residentialAddress = sanitize($_POST['residential_address']);
 $mailingAddress = sanitize($_POST['mailing_address']);
+$email = sanitize($_POST['email']);
 $password = $_POST['password'];
 $rePassword = $_POST['re_password'];
+
+// Server-side Email Validation
+$email = sanitize($_POST['email']);
+
+// Check if email is valid
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors[] = "Please enter a valid email address.";
+}
+
+if (!empty($errors)) {
+    die("Errors: " . implode(", ", $errors));
+}
 
 // Validation
 $errors = [];
@@ -52,6 +65,16 @@ if (!empty($errors)) {
 // Hash the password
 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
+// Check if NIC already exists
+$checkNIC = $conn->prepare("SELECT * FROM users WHERE nic = ?");
+$checkNIC->bind_param("s", $nic);
+$checkNIC->execute();
+$result = $checkNIC->get_result();
+
+if ($result->num_rows > 0) {
+    die("Error: NIC already exists.");
+}
+
 // Handle photo upload
 $photo = $_FILES['photo']['name'];
 $targetDir = "uploads/";
@@ -62,16 +85,16 @@ if (!move_uploaded_file($_FILES['photo']['tmp_name'], $targetFile)) {
 }
 
 // Insert into database
-$stmt = $conn->prepare("INSERT INTO user_profiles (first_name, last_name, dob, nic, mobile, residential_address, mailing_address, password, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("sssssssss", $firstName, $lastName, $dob, $nic, $mobile, $residentialAddress, $mailingAddress, $hashedPassword, $photo);
+$stmt = $conn->prepare("INSERT INTO users (first_name, last_name, dob, nic, mobile, residential_address, mailing_address, email, password, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("ssssssssss", $firstName, $lastName, $dob, $nic, $mobile, $residentialAddress, $mailingAddress, $email, $hashedPassword, $photo);
 
 if ($stmt->execute()) {
     header("Location: Login.html");
-    //echo "Profile saved successfully!";
 } else {
     echo "Error: " . $stmt->error;
 }
 
 $stmt->close();
 $conn->close();
+
 ?>
