@@ -4,6 +4,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Update Profile</title>
+
+  <script>
+    // Restrict input to letters only for First Name and Last Name
+    function validateNameInput(event) {
+      const char = String.fromCharCode(event.which);
+      if (!/[a-zA-Z ]/.test(char)) {
+        event.preventDefault();
+      }
+    }
+  
+    // Restrict input to digits only for Mobile Number
+    function validateMobileInput(event) {
+      const char = String.fromCharCode(event.which);
+      if (!/[0-9]/.test(char)) {
+        event.preventDefault();
+      }
+    }
+  
+    // Password validation
+    function validatePassword() {
+      const password = document.getElementById('password').value;
+      const rePassword = document.getElementById('rePassword').value;
+      const passwordMessage = document.getElementById('passwordMessage');
+  
+      // Check if password meets criteria
+      const isValid = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/.test(password);
+      if (!isValid) {
+        passwordMessage.textContent = "Password must be at least 6 characters long and include letters, numbers, and symbols.";
+        return false;
+      }
+  
+      // Check if passwords match
+      if (password !== rePassword) {
+        passwordMessage.textContent = "Passwords do not match.";
+        return false;
+      }
+  
+      passwordMessage.textContent = "";
+      return true;
+    }
+  
+    // Attach validation to input fields
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('firstName').addEventListener('keypress', validateNameInput);
+      document.getElementById('lastName').addEventListener('keypress', validateNameInput);
+      document.getElementById('mobile').addEventListener('keypress', validateMobileInput);
+  
+      // Validate password on form submission
+      document.querySelector('.update-form').addEventListener('submit', (event) => {
+        if (!validatePassword()) {
+          event.preventDefault();
+        }
+      });
+    });
+  </script>
+  
   <style>
     /* General Styles */
     body {
@@ -81,7 +137,8 @@
       flex-direction: column;
     }
 
-    .form-group input {
+    .form-group input,
+    .form-group textarea {
       padding: 10px;
       border: 1px solid #ddd;
       border-radius: 5px;
@@ -159,56 +216,58 @@
   <!-- Form -->
   <main class="form-container">
     <h1>Update Your Profile</h1>
-    <form class="update-form">
+    <form class="update-form" action="save_profile.php" method="POST" enctype="multipart/form-data">
       <div class="form-group">
         <label for="firstName">First Name *</label>
-        <input type="text" id="firstName" placeholder="Enter First Name">
+        <input type="text" id="firstName" name="first_name" placeholder="Enter First Name" required>
       </div>
 
       <div class="form-group">
         <label for="lastName">Last Name *</label>
-        <input type="text" id="lastName" placeholder="Enter Last Name">
+        <input type="text" id="lastName" name="last_name" placeholder="Enter Last Name" required>
       </div>
 
       <div class="form-group">
         <label for="dob">Date of Birth *</label>
-        <input type="text" id="dob" placeholder="DD | MM | YYYY">
+        <input type="date" id="dob" name="dob" required>
       </div>
 
       <div class="form-group">
         <label for="nic">NIC No *</label>
-        <input type="text" id="nic" placeholder="Enter Your National Identity Card Number">
+        <input type="text" id="nic" name="nic" placeholder="Enter Your NIC Number" required>
       </div>
 
       <div class="form-group">
         <label for="mobile">Mobile No *</label>
-        <input type="text" id="mobile" placeholder="Enter Your Mobile Number">
+        <input type="text" id="mobile" name="mobile" placeholder="Enter Your Mobile Number" required>
       </div>
 
       <div class="form-group photo-upload">
         <label for="photo">Upload Your Photo *</label>
-        <input type="file" id="photo">
+        <input type="file" id="photo" name="photo" accept="image/*" required>
       </div>
 
       <div class="form-group">
         <label for="residentialAddress">Residential Address *</label>
-        <input type="text" id="residentialAddress" placeholder="Enter Your Address">
+        <textarea id="residentialAddress" name="residential_address" placeholder="Enter Your Address" required></textarea>
       </div>
 
       <div class="form-group">
-        <label for="mailingAddress">Mailing Address (If Different) *</label>
-        <input type="text" id="mailingAddress" placeholder="Enter Your Address">
+        <label for="mailingAddress">Mailing Address *</label>
+        <textarea id="mailingAddress" name="mailing_address" placeholder="Enter Your Mailing Address" required></textarea>
       </div>
 
       <div class="form-group">
         <label for="password">Password *</label>
-        <input type="password" id="password" placeholder="Enter Your Password">
+        <input type="password" id="password" name="password" placeholder="Enter Your Password" required>
       </div>
-
+      
       <div class="form-group">
         <label for="rePassword">Re-enter Password *</label>
-        <input type="password" id="rePassword" placeholder="Re-enter Your Password">
+        <input type="password" id="rePassword" name="re_password" placeholder="Re-enter Your Password" required>
+        <span id="passwordMessage" style="color: red; font-size: 0.9em;"></span>
       </div>
+      
 
       <button type="submit" class="save-button">Save</button>
     </form>
