@@ -66,7 +66,8 @@ $stmt = $conn->prepare("INSERT INTO user_profiles (first_name, last_name, dob, n
 $stmt->bind_param("sssssssss", $firstName, $lastName, $dob, $nic, $mobile, $residentialAddress, $mailingAddress, $hashedPassword, $photo);
 
 if ($stmt->execute()) {
-    echo "Profile saved successfully!";
+    header("Location: Login.html");
+    //echo "Profile saved successfully!";
 } else {
     echo "Error: " . $stmt->error;
 }
