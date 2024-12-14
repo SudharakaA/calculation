@@ -10,7 +10,7 @@
   <!-- Navbar -->
   <div class="navbar">
     <div class="taxgen__navbar-links_logo">
-      <img src="https://github.com/SudharakaA/calculation/blob/main/assets/taxgen%20logo.png" alt="TaxGen Logo" height="50" />
+      <img src="https://via.placeholder.com/100" alt="TaxGen Logo" height="50" />
     </div>
     <ul>
       <li><a href="#">Home</a></li>
@@ -28,11 +28,7 @@
   <!-- Tax Consulting Section -->
   <div class="tax-consulting">
     <h1>Meet Our Tax Advisors</h1>
-
-    <!-- Advisors will be dynamically inserted here -->
     <div id="advisorCards"></div>
-
-    <!-- Pagination -->
     <div class="pagination">
       <button id="prevBtn" onclick="changePage(-1)">Previous</button>
       <button id="nextBtn" onclick="changePage(1)">Next</button>
@@ -42,18 +38,34 @@
   <!-- Popup Form -->
   <div class="popup-overlay" id="popupOverlay"></div>
   <div class="popup-form" id="popupForm">
-    <h2>Advisor Details</h2>
-    <p id="advisorName"></p>
-    <p id="advisorPosition"></p>
-    <p id="advisorExperience"></p>
-    <p id="advisorQualifications"></p>
+    <h2>Contact Advisor</h2>
+    <form id="contactForm">
+      <input type="hidden" id="advisorId" name="advisorId">
+      <input type="hidden" id="advisorName" name="advisorName">
+      <label for="clientName">Client Name:</label>
+      <input type="text" id="clientName" name="clientName" required>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <label for="mobile">Mobile No:</label>
+      <input type="text" id="mobile" name="mobile" required>
+      <label for="faxNo">Fax No:</label>
+      <input type="text" id="faxNo" name="faxNo">
+      <label for="landLine">Land Line:</label>
+      <input type="text" id="landLine" name="landLine">
+      <label for="organization">Organization:</label>
+      <input type="text" id="organization" name="organization">
+      <label for="occupation">Occupation:</label>
+      <input type="text" id="occupation" name="occupation">
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" rows="4" required></textarea>
+      <button type="submit">Send</button>
+    </form>
     <button type="button" onclick="closeForm()">Close</button>
   </div>
 
   <!-- Footer -->
   <footer>
     <p>TaxGen is an innovative tax management solution. All rights reserved © 2024</p>
-    <a href="#">Privacy Policy</a>
   </footer>
 
   <script>
@@ -61,12 +73,9 @@
     let advisors = [];
     let totalPages = 0;
 
-    // Function to render advisor cards dynamically
     function renderAdvisors() {
       const advisorCardsContainer = document.getElementById('advisorCards');
-      advisorCardsContainer.innerHTML = '';  // Clear existing content
-
-      // Loop through the advisors data and create cards
+      advisorCardsContainer.innerHTML = '';
       advisors.forEach(advisor => {
         const card = document.createElement('div');
         card.classList.add('advisor-profile');
@@ -78,23 +87,20 @@
             <p>Experience: ${advisor.experience}</p>
             <p>Qualifications: ${advisor.qualifications}</p>
           </div>
-          <button onclick="openForm('${advisor.name}', '${advisor.position}', '${advisor.experience}', '${advisor.qualifications}')">Contact</button>
+          <button onclick="openForm(${advisor.id}, '${advisor.name}')">Contact</button>
         `;
         advisorCardsContainer.appendChild(card);
       });
 
-      // Update the pagination buttons
       document.getElementById('prevBtn').disabled = currentPage === 1;
       document.getElementById('nextBtn').disabled = currentPage === totalPages;
     }
 
-    // Function to handle page change (Previous / Next)
     function changePage(direction) {
       currentPage += direction;
       fetchAdvisors();
     }
 
-    // Fetch advisors data for the current page
     function fetchAdvisors() {
       fetch('fetch_advisors.php?page=' + currentPage)
         .then(response => response.json())
@@ -102,29 +108,32 @@
           advisors = data.advisors;
           totalPages = data.totalPages;
           renderAdvisors();
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
         });
     }
 
-    // Open the contact form
-    function openForm(name, position, experience, qualifications) {
-      document.getElementById('advisorName').innerText = 'Name: ' + name;
-      document.getElementById('advisorPosition').innerText = 'Position: ' + position;
-      document.getElementById('advisorExperience').innerText = 'Experience: ' + experience;
-      document.getElementById('advisorQualifications').innerText = 'Qualifications: ' + qualifications;
+    function openForm(id, name) {
+      document.getElementById('advisorId').value = id;
+      document.getElementById('advisorName').value = name;
       document.getElementById('popupOverlay').style.display = 'block';
       document.getElementById('popupForm').style.display = 'block';
     }
 
-    // Close the contact form
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch('submit_contact.php', { method: 'POST', body: formData })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message);
+          closeForm();
+        });
+    });
+
     function closeForm() {
       document.getElementById('popupOverlay').style.display = 'none';
       document.getElementById('popupForm').style.display = 'none';
     }
 
-    // Initial render
     fetchAdvisors();
   </script>
 </body>
