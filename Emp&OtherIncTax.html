@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Tax Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #0e2a5a;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+        h1 {
+            margin: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px 15px;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4267b2;
+            color: #fff;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 5px;
+            text-align: right;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #0e2a5a;
+            color: #fff;
+        }
+        .calculate-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4267b2;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .calculate-btn:hover {
+            background-color: #365899;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Income Tax Calculator</h1>
+            <p>(Employment and Other Income)</p>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>For 12 Months Period</th>
+                    <th>Average Per Month</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Income from employment</td>
+                    <td><input type="number" id="employmentIncome" value="144000000" onchange="recalculate()"></td>
+                    <td><span id="employmentIncomeMonthly">12,000,000.00</span></td>
+                </tr>
+                <tr>
+                    <td>Income from investments</td>
+                    <td><input type="number" id="investmentIncome" value="144000000" onchange="recalculate()"></td>
+                    <td><span id="investmentIncomeMonthly">12,000,000.00</span></td>
+                </tr>
+                <tr>
+                    <td>Income from business</td>
+                    <td><input type="number" id="businessIncome" value="14400000" onchange="recalculate()"></td>
+                    <td><span id="businessIncomeMonthly">1,200,000.00</span></td>
+                </tr>
+                <tr>
+                    <td>Total Taxable Income on Employment</td>
+                    <td><span id="totalIncome">302,400,000.00</span></td>
+                    <td><span id="totalIncomeMonthly">25,200,000.00</span></td>
+                </tr>
+                <tr>
+                    <td>Tax Free Allowance</td>
+                    <td><input type="number" id="taxFreeAllowance" value="-1200000" onchange="recalculate()"></td>
+                    <td><span id="taxFreeAllowanceMonthly">-100,000.00</span></td>
+                </tr>
+                <tr>
+                    <td>Qualifying Allowance on Solar Loans</td>
+                    <td><input type="number" id="solarAllowance" value="-14400000" onchange="recalculate()"></td>
+                    <td><span id="solarAllowanceMonthly">-1,200,000.00</span></td>
+                </tr>
+                <tr>
+                    <th>TOTAL TAXABLE INCOME</th>
+                    <th><span id="totalTaxableIncome">286,800,000.00</span></th>
+                    <th><span id="totalTaxableIncomeMonthly">23,900,000.00</span></th>
+                </tr>
+                <tr>
+                    <td>First 500,000 X 6%</td>
+                    <td><span id="taxFirst500k">0.00</span></td>
+                    <td><span id="monthlyFirst500k">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>Second 500,000 X 12%</td>
+                    <td><span id="taxSecond500k">0.00</span></td>
+                    <td><span id="monthlySecond500k">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>Third 500,000 X 18%</td>
+                    <td><span id="taxThird500k">0.00</span></td>
+                    <td><span id="monthlyThird500k">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>Fourth 500,000 X 24%</td>
+                    <td><span id="taxFourth500k">0.00</span></td>
+                    <td><span id="monthlyFourth500k">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>Fifth 500,000 X 30%</td>
+                    <td><span id="taxFifth500k">0.00</span></td>
+                    <td><span id="monthlyFifth500k">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>Balance X 36%</td>
+                    <td><span id="taxBalance">0.00</span></td>
+                    <td><span id="monthlyTaxBalance">0.00</span></td>
+                </tr>
+                <tr>
+                    <th>TOTAL TAX PAYABLE</th>
+                    <th><span id="totalAnnualTax">0.00</span></th>
+                    <th><span id="totalMonthlyTax">0.00</span></th>
+                </tr>
+                <tr>
+                    <td>Tax Credits from APIT</td>
+                    <td><input type="number" id="taxCreditsAPIT" value="0" onchange="recalculate()"></td>
+                    <td><span id="monthlyTaxCreditsAPIT">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>Tax Credits from AIT</td>
+                    <td><input type="number" id="taxCreditsAIT" value="0" onchange="recalculate()"></td>
+                    <td><span id="monthlyTaxCreditsAIT">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>Tax Credits from Quarterly Payments</td>
+                    <td><input type="number" id="taxCreditsQuarterly" value="0" onchange="recalculate()"></td>
+                    <td><span id="monthlyTaxCreditsQuarterly">0.00</span></td>
+                </tr>
+                <tr>
+                    <th>TOTAL TAX CREDITS</th>
+                    <th><span id="totalTaxCredits">0.00</span></th>
+                    <th><span id="totalMonthlyTaxCredits">0.00</span></th>
+                </tr>
+                <tr>
+                    <th>BALANCE TAX PAYABLE / (REFUND DUE)</th>
+                    <th><span id="balanceTaxPayable">0.00</span></th>
+                    <th><span id="monthlyBalanceTaxPayable">0.00</span></th>
+                </tr>
+            </tbody>
+        </table>
+        <button class="calculate-btn" onclick="recalculate()">Calculate Tax</button>
+        <button class="calculate-btn" onclick="downloadPDF()">Download PDF</button>
+        <div class="footer">
+            <p>&copy; 2024 TaxGen. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        function recalculate() {
+            // Input values
+            const employmentIncome = parseFloat(document.getElementById("employmentIncome").value) || 0;
+            const investmentIncome = parseFloat(document.getElementById("investmentIncome").value) || 0;
+            const businessIncome = parseFloat(document.getElementById("businessIncome").value) || 0;
+            const taxFreeAllowance = parseFloat(document.getElementById("taxFreeAllowance").value) || 0;
+            const solarAllowance = parseFloat(document.getElementById("solarAllowance").value) || 0;
+            const taxCreditsAPIT = parseFloat(document.getElementById("taxCreditsAPIT").value) || 0;
+            const taxCreditsAIT = parseFloat(document.getElementById("taxCreditsAIT").value) || 0;
+            const taxCreditsQuarterly = parseFloat(document.getElementById("taxCreditsQuarterly").value) || 0;
+
+            // Calculate monthly income
+            document.getElementById("employmentIncomeMonthly").innerText = (employmentIncome / 12).toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById("investmentIncomeMonthly").innerText = (investmentIncome / 12).toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById("businessIncomeMonthly").innerText = (businessIncome / 12).toLocaleString('en-US', { minimumFractionDigits: 2 });
+
+            // Total taxable income on employment
+            const totalIncome = employmentIncome + investmentIncome + businessIncome;
+            document.getElementById("totalIncome").innerText = totalIncome.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById("totalIncomeMonthly").innerText = (totalIncome / 12).toLocaleString('en-US', { minimumFractionDigits: 2 });
+
+            // Total taxable income after allowances
+            const totalTaxableIncome = totalIncome + taxFreeAllowance + solarAllowance;
+            document.getElementById("totalTaxableIncome").innerText = totalTaxableIncome.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById("totalTaxableIncomeMonthly").innerText = (totalTaxableIncome / 12).toLocaleString('en-US', { minimumFractionDigits: 2 });
+
+            // Tax brackets
+            const brackets = [
+                { limit: 500000, rate: 0.06 },
+                { limit: 500000, rate: 0.12 },
+                { limit: 500000, rate: 0.18 },
+                { limit: 500000, rate: 0.24 },
+                { limit: 500000, rate: 0.30 },
+                { limit: Infinity, rate: 0.36 }
+            ];
+
+            let remainingTaxable = totalTaxableIncome;
+            let annualTax = 0;
+            let taxResults = [];
+
+            for (let i = 0; i < brackets.length; i++) {
+                let taxableAmount = Math.min(remainingTaxable, brackets[i].limit);
+                let tax = taxableAmount * brackets[i].rate;
+                taxResults.push(tax);
+                annualTax += tax;
+                remainingTaxable -= taxableAmount;
+                if (remainingTaxable <= 0) break;
+            }
+
+            // Update HTML for tax brackets
+            document.getElementById("taxFirst500k").innerText = taxResults[0]?.toFixed(2) || "0.00";
+            document.getElementById("monthlyFirst500k").innerText = ((taxResults[0] || 0) / 12).toFixed(2);
+
+            document.getElementById("taxSecond500k").innerText = taxResults[1]?.toFixed(2) || "0.00";
+            document.getElementById("monthlySecond500k").innerText = ((taxResults[1] || 0) / 12).toFixed(2);
+
+            document.getElementById("taxThird500k").innerText = taxResults[2]?.toFixed(2) || "0.00";
+            document.getElementById("monthlyThird500k").innerText = ((taxResults[2] || 0) / 12).toFixed(2);
+
+            document.getElementById("taxFourth500k").innerText = taxResults[3]?.toFixed(2) || "0.00";
+            document.getElementById("monthlyFourth500k").innerText = ((taxResults[3] || 0) / 12).toFixed(2);
+
+            document.getElementById("taxFifth500k").innerText = taxResults[4]?.toFixed(2) || "0.00";
+            document.getElementById("monthlyFifth500k").innerText = ((taxResults[4] || 0) / 12).toFixed(2);
+
+            document.getElementById("taxBalance").innerText = taxResults[5]?.toFixed(2) || "0.00";
+            document.getElementById("monthlyTaxBalance").innerText = ((taxResults[5] || 0) / 12).toFixed(2);
+
+            document.getElementById("totalAnnualTax").innerText = annualTax.toFixed(2);
+            document.getElementById("totalMonthlyTax").innerText = (annualTax / 12).toFixed(2);
+
+            // Total tax credits
+            const totalTaxCredits = taxCreditsAPIT + taxCreditsAIT + taxCreditsQuarterly;
+            document.getElementById("totalTaxCredits").innerText = totalTaxCredits.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById("totalMonthlyTaxCredits").innerText = (totalTaxCredits / 12).toLocaleString('en-US', { minimumFractionDigits: 2 });
+
+            // Balance tax payable or refund due
+            const balanceTaxPayable = annualTax - totalTaxCredits;
+            document.getElementById("balanceTaxPayable").innerText = balanceTaxPayable.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById("monthlyBalanceTaxPayable").innerText = (balanceTaxPayable / 12).toLocaleString('en-US', { minimumFractionDigits: 2 });
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.text("Income Tax Calculator (Employment and Other Income)", 20, 20);
+            doc.autoTable({ html: 'table' });
+
+            doc.save("Income_Tax_Calculator.pdf");
+        }
+
+        // Initial calculation on load
+        window.onload = recalculate;
+    </script>
+</body>
+</html>
