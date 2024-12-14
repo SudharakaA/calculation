@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Profile</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #002b5c;
+      color: white;
+      padding: 10px 20px;
+    }
+
+    .navbar .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+    }
+
+    .navbar ul li a {
+      text-decoration: none;
+      color: white;
+    }
+
+    .auth-buttons .login,
+    .auth-buttons .signup {
+      background-color: white;
+      border: none;
+      padding: 5px 10px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .signup {
+      background-color: #1d5ef6;
+      color: white;
+    }
+
+    /* Form */
+    .form-container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .update-form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+
+    .photo-upload input {
+      padding: 5px;
+    }
+
+    .save-button {
+      grid-column: span 2;
+      background-color: #002b5c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #002b5c;
+      color: white;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 20px;
+    }
+
+    footer .footer-logo {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .newsletter input {
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .newsletter button {
+      margin-top: 5px;
+      padding: 10px 15px;
+      background-color: #1d5ef6;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">TaxGen</div>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Calculate</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </nav>
+    <div class="auth-buttons">
+      <button class="login">Login</button>
+      <button class="signup">Sign Up</button>
+    </div>
+  </header>
+
+  <!-- Form -->
+  <main class="form-container">
+    <h1>Update Your Profile</h1>
+    <form class="update-form">
+      <div class="form-group">
+        <label for="firstName">First Name *</label>
+        <input type="text" id="firstName" placeholder="Enter First Name">
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name *</label>
+        <input type="text" id="lastName" placeholder="Enter Last Name">
+      </div>
+
+      <div class="form-group">
+        <label for="dob">Date of Birth *</label>
+        <input type="text" id="dob" placeholder="DD | MM | YYYY">
+      </div>
+
+      <div class="form-group">
+        <label for="nic">NIC No *</label>
+        <input type="text" id="nic" placeholder="Enter Your National Identity Card Number">
+      </div>
+
+      <div class="form-group">
+        <label for="mobile">Mobile No *</label>
+        <input type="text" id="mobile" placeholder="Enter Your Mobile Number">
+      </div>
+
+      <div class="form-group photo-upload">
+        <label for="photo">Upload Your Photo *</label>
+        <input type="file" id="photo">
+      </div>
+
+      <div class="form-group">
+        <label for="residentialAddress">Residential Address *</label>
+        <input type="text" id="residentialAddress" placeholder="Enter Your Address">
+      </div>
+
+      <div class="form-group">
+        <label for="mailingAddress">Mailing Address (If Different) *</label>
+        <input type="text" id="mailingAddress" placeholder="Enter Your Address">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password *</label>
+        <input type="password" id="password" placeholder="Enter Your Password">
+      </div>
+
+      <div class="form-group">
+        <label for="rePassword">Re-enter Password *</label>
+        <input type="password" id="rePassword" placeholder="Re-enter Your Password">
+      </div>
+
+      <button type="submit" class="save-button">Save</button>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">TaxGen</div>
+      <p>TaxGen is an innovative tax management solution...</p>
+    </div>
+    <div class="footer-links">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Packages</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="newsletter">
+      <h3>Join Our Newsletter</h3>
+      <input type="email" placeholder="Enter Your Email">
+      <button>Subscribe</button>
+    </div>
+    <div class="contact">
+      <h3>Get in Touch</h3>
+      <p>+94 77 543 9120</p>
+      <div class="social-icons">
+        <a href="#">Email</a>
+        <a href="#">Twitter</a>
+        <a href="#">Facebook</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
