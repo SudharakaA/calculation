@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 
 // Get the page number from the URL
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = 5;  // Number of advisors per page
+$limit = 8;  // Number of advisors per page
 $offset = ($page - 1) * $limit;
 
 // Query to fetch advisor data
