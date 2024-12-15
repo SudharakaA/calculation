@@ -430,17 +430,23 @@
             logo.onload = function() {
                 doc.addImage(logo, 'PNG', 10, 10, 50, 50); // Adjust the position and size as needed
 
-                doc.text("Business Tax Calculation", 10, 70);
-                doc.text("Business Name: " + businessName, 10, 80);
-                doc.text("Registration Number: " + registrationNumber, 10, 90);
-                doc.text("Business Type: " + businessType, 10, 100);
-                doc.text("Total Business Income (LKR): " + income, 10, 110);
-                doc.text("Total Deductible Expenses (LKR): " + deductions, 10, 120);
-                doc.text("Other Deductions (LKR): " + otherDeductions, 10, 130);
-                doc.text("Tax Year: " + taxYear, 10, 140);
-                doc.text("VAT Registered: " + vatRegistered, 10, 150);
-                doc.text("Additional Information: " + additionalInfo, 10, 160);
-                doc.text(taxResult, 10, 170);
+                doc.setFontSize(18);
+                doc.setTextColor(0, 0, 255);
+                doc.text("Business Tax Calculation", 70, 30);
+
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text("Business Name: " + businessName, 10, 60);
+                doc.text("Registration Number: " + registrationNumber, 10, 70);
+                doc.text("Business Type: " + businessType, 10, 80);
+                doc.text("Total Business Income (LKR): " + income, 10, 90);
+                doc.text("Total Deductible Expenses (LKR): " + deductions, 10, 100);
+                doc.text("Other Deductions (LKR): " + otherDeductions, 10, 110);
+                doc.text("Tax Year: " + taxYear, 10, 120);
+                doc.text("VAT Registered: " + vatRegistered, 10, 130);
+                doc.text("Additional Information: " + additionalInfo, 10, 140);
+                doc.setTextColor(255, 0, 0);
+                doc.text(taxResult, 10, 150);
 
                 doc.save("tax_calculation.pdf");
             };
