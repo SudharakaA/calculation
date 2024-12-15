@@ -6,10 +6,11 @@
     <title>Tax Calculation Panel</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f8f8;
+            background-color: #f0f2f5;
+            color: #333;
         }
 
         .navbar {
@@ -19,12 +20,18 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .navbar a {
             color: #fff;
             text-decoration: none;
             margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
         }
 
         .container {
@@ -32,15 +39,18 @@
             justify-content: center;
             align-items: flex-start;
             padding: 30px;
+            gap: 20px;
         }
 
-        .tax-categories {
+        .tax-categories, .calculation-form {
             background: #fff;
             border-radius: 10px;
             padding: 20px;
-            width: 30%;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-right: 20px;
+        }
+
+        .tax-categories {
+            width: 30%;
         }
 
         .tax-category {
@@ -88,15 +98,12 @@
         }
 
         .calculation-form {
-            background: #fff;
-            border-radius: 10px;
-            padding: 20px;
             width: 50%;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .calculation-form h2 {
             margin-bottom: 20px;
+            color: #007BFF;
         }
 
         .form-group {
@@ -114,6 +121,7 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 8px;
+            font-size: 16px;
         }
 
         .form-group button {
@@ -141,6 +149,11 @@
             text-decoration: none;
             color: #007bff;
             cursor: pointer;
+            font-weight: bold;
+        }
+
+        .download-section a:hover {
+            text-decoration: underline;
         }
 
         footer {
@@ -149,6 +162,7 @@
             text-align: center;
             padding: 15px 0;
             margin-top: 30px;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
 
         /* Profile section styles */
@@ -160,6 +174,7 @@
             text-decoration: none;
             color: #007BFF;
             cursor: pointer;
+            font-weight: bold;
         }
         .profile-section a:hover {
             text-decoration: underline;
@@ -187,6 +202,7 @@
             width: 80%;
             max-width: 500px;
             border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .close {
             color: #aaa;
@@ -206,17 +222,15 @@
 </head>
 <body>
     <div class="navbar">
-      
-   
-            <div class="taxgen__navbar-links_logo">
-                <img src="data:image/png;base64,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" alt="logo" class="logo"></div>
-            <nav class="nav-links">
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Calculate</a>
-                <a href="#">Services</a>
-                <a href="#">Contact Us</a>
-            
+        <div class="taxgen__navbar-links_logo">
+            <img src="data:image/png;base64,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" alt="logo" class="logo">
+        </div>
+        <nav class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Calculate</a>
+            <a href="#">Services</a>
+            <a href="#">Contact Us</a>
         </nav>
         <div class="user-profile">
             <span id="profile-link">S.D.K.Perera</span>
@@ -409,20 +423,28 @@
             var additionalInfo = document.getElementById("additional-info").value;
             var taxResult = document.getElementById("tax-result").textContent;
 
-            doc.text("Business Tax Calculation", 10, 10);
-            doc.text("Business Name: " + businessName, 10, 20);
-            doc.text("Registration Number: " + registrationNumber, 10, 30);
-            doc.text("Business Type: " + businessType, 10, 40);
-            doc.text("Total Business Income (LKR): " + income, 10, 50);
-            doc.text("Total Deductible Expenses (LKR): " + deductions, 10, 60);
-            doc.text("Other Deductions (LKR): " + otherDeductions, 10, 70);
-            doc.text("Tax Year: " + taxYear, 10, 80);
-            doc.text("VAT Registered: " + vatRegistered, 10, 90);
-            doc.text("Additional Information: " + additionalInfo, 10, 100);
-            doc.text(taxResult, 10, 110);
+            // Add TaxGen logo
+            var logo = new Image();
+            logo.src = "data:image/png;base64,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";
 
-            doc.save("tax_calculation.pdf");
-        }
+            logo.onload = function() {
+                doc.addImage(logo, 'PNG', 10, 10, 50, 50); // Adjust the position and size as needed
+
+                doc.text("Business Tax Calculation", 10, 70);
+                doc.text("Business Name: " + businessName, 10, 80);
+                doc.text("Registration Number: " + registrationNumber, 10, 90);
+                doc.text("Business Type: " + businessType, 10, 100);
+                doc.text("Total Business Income (LKR): " + income, 10, 110);
+                doc.text("Total Deductible Expenses (LKR): " + deductions, 10, 120);
+                doc.text("Other Deductions (LKR): " + otherDeductions, 10, 130);
+                doc.text("Tax Year: " + taxYear, 10, 140);
+                doc.text("VAT Registered: " + vatRegistered, 10, 150);
+                doc.text("Additional Information: " + additionalInfo, 10, 160);
+                doc.text(taxResult, 10, 170);
+
+                doc.save("tax_calculation.pdf");
+            };
+        };
 
         function restrictNumericInput(event) {
             const key = event.key;
