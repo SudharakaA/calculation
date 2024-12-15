@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tin Registration Form</title>
+    <link rel="stylesheet" href="tinreg.css">
+    <style>
+        /* Styling for the character counter in the corner of the input box */
+        .input-wrapper {
+            position: relative;
+        }
+
+        .char-counter {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 12px;
+            color: gray;
+            pointer-events: none;
+        }
+
+        input, textarea {
+            padding-right: 40px; /* To avoid overlap with the counter */
+        }
+
+        textarea {
+            resize: none;
+        }
+    </style>
+    <script>
+        function validateForm() {
+            const name = document.forms["taxForm"]["name"].value;
+            const email = document.forms["taxForm"]["email"].value;
+            const phone = document.forms["taxForm"]["phone"].value;
+            const organization = document.forms["taxForm"]["organization"].value;
+            const occupation = document.forms["taxForm"]["occupation"].value;
+            const message = document.forms["taxForm"]["message"].value;
+            const files = document.forms["taxForm"]["documents"].files;
+
+            const emailRegex = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+            const phoneRegex = /^\+94\d{9}$/;
+            const scriptRegex = /<script\b[^>]*>(.*?)<\/script>/gi;
+
+            if (name.trim() === "" || /\d/.test(name)) {
+                alert("Name cannot be empty or contain numbers");
+                return false;
+            }
+
+            if (!email.match(emailRegex)) {
+                alert("Enter a valid email");
+                return false;
+            }
+
+            if (!phone.match(phoneRegex) || /[a-zA-Z]/.test(phone)) {
+                alert("Phone number must be in +94 format and cannot contain letters");
+                return false;
+            }
+
+            if (organization.length > 25) {
+                alert("Organization name must be 25 characters or less");
+                return false;
+            }
+
+            if (occupation.length > 25) {
+                alert("Occupation must be 25 characters or less");
+                return false;
+            }
+
+            if (scriptRegex.test(message)) {
+                alert("Message cannot contain script tags");
+                return false;
+            }
+
+            for (let file of files) {
+                const fileSize = file.size / 1024 / 1024; // Size in MB
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+
+                if (fileSize > 5) {
+                    alert(`File ${file.name} exceeds 5MB`);
+                    return false;
+                }
+
+                if (!["jpg", "jpeg", "png", "pdf", "docx"].includes(fileExtension)) {
+                    alert(`File ${file.name} must be an image, PDF, or DOCX`);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function updateCounter(inputField, counterId, maxLength) {
+            const counter = document.getElementById(counterId);
+            const remaining = maxLength - inputField.value.length;
+
+            counter.textContent = `(${remaining})`;
+
+            if (remaining < 0) {
+                counter.style.color = "red";
+            } else {
+                counter.style.color = "gray";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Tin Registration Form</h2>
+        <form name="taxForm" action="submit_form.php" method="POST" onsubmit="return validateForm();" enctype="multipart/form-data">
+            <label for="name">Your Name</label>
+            <input type="text" name="name" placeholder="Your Name" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+
+            <label for="email">Your Email</label>
+            <input type="email" name="email" placeholder="Your Email" required>
+
+            <label for="phone">Phone (+94 000000000)</label>
+            <input type="tel" name="phone" placeholder="Phone (+94 000000000)" oninput="this.value = this.value.replace(/[^0-9+]/g, '')" required>
+
+            <label for="organization">Organization</label>
+            <div class="input-wrapper">
+                <input type="text" name="organization" placeholder="Your Organization" oninput="updateCounter(this, 'organizationCounter', 25);" maxlength="25">
+                <span class="char-counter" id="organizationCounter">(25)</span>
+            </div>
+
+            <label for="occupation">Occupation</label>
+            <div class="input-wrapper">
+                <input type="text" name="occupation" placeholder="Your Occupation" oninput="updateCounter(this, 'occupationCounter', 25);" maxlength="25">
+                <span class="char-counter" id="occupationCounter">(25)</span>
+            </div>
+
+            <label for="message">Message</label>
+            <div class="input-wrapper">
+                <textarea name="message" placeholder="Your Message" oninput="updateCounter(this, 'messageCounter', 500);" maxlength="500"></textarea>
+                <span class="char-counter" id="messageCounter">(500)</span>
+            </div>
+
+            <label for="documents">Upload Documents (Max 5MB, Images/PDF/DOCX Only)</label>
+            <input type="file" name="documents[]" multiple>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
