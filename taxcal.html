@@ -423,6 +423,21 @@
 
             doc.save("tax_calculation.pdf");
         }
+
+        function restrictNumericInput(event) {
+            const key = event.key;
+            if (!/[0-9]/.test(key) && key !== 'Backspace' && key !== 'ArrowLeft' && key !== 'ArrowRight') {
+                event.preventDefault();
+            }
+        }
+
+        // Initial setup on load
+        window.onload = function() {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('keydown', restrictNumericInput);
+            });
+        };
     </script>
 </body>
 </html>
