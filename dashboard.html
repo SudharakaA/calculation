@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaxGen Dashboard</title>
+  <style>
+    /* General Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #6a11cb, #2575fc);
+      color: #fff;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background: linear-gradient(to bottom, #000000, #434343);
+      color: #ccc;
+    }
+
+    /* Dashboard Container */
+    .dashboard-container {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: #1c1e26;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s;
+    }
+
+    .sidebar.dark-mode {
+      background: #000000;
+    }
+
+    .sidebar h2 {
+      color: #a29bfe;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar li {
+      margin: 15px 0;
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .sidebar li:hover {
+      background: #282c34;
+    }
+
+    .sidebar li.dark-mode:hover {
+      background: #333333;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .main-content.dark-mode {
+      background: #1c1e26;
+      color: #ccc;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .header input {
+      padding: 10px;
+      width: 200px;
+      border: none;
+      border-radius: 20px;
+    }
+
+    .header .dark-mode-toggle {
+      cursor: pointer;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      background: #a29bfe;
+      color: #fff;
+      transition: background 0.3s;
+    }
+
+    .header .dark-mode-toggle:hover {
+      background: #6a11cb;
+    }
+
+    /* Cards */
+    .cards {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      flex: 1;
+      background: #1c1e26;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      transition: transform 0.3s, background 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      background: #282c34;
+    }
+
+    .card a {
+      color: #a29bfe;
+      text-decoration: none;
+      display: block;
+      height: 100%;
+      width: 100%;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 1.5rem;
+    }
+
+    /* Graphs */
+    .graphs {
+      display: flex;
+      gap: 20px;
+    }
+
+    .graph {
+      flex: 1;
+      background: #1c1e26;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Dashboard</h2>
+      <ul>
+        <li>Document</li>
+        <li>Calendar</li>
+        <li>Activity</li>
+        <li>Profile</li>
+        <li id="dark-mode-toggle">Dark Mode</li>
+        <li>Settings</li>
+        <li>Logout</li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <h1>Finance Dashboard</h1>
+        <input type="text" placeholder="Search..." />
+        <button class="dark-mode-toggle" id="dark-mode-toggle-btn">Toggle Dark Mode</button>
+      </header>
+
+      <!-- Dashboard Cards -->
+      <div class="cards">
+        <div class="card">
+          <a href="admin_panel.php">
+            <h3>Admin Panel</h3>
+          </a>
+        </div>
+        <div class="card">
+          <a href="client_contacts.php">
+            <h3>Client Contacts</h3>
+          </a>
+        </div>
+      </div>
+
+      <!-- Graphs -->
+      <div class="graphs">
+        <div class="graph">Graph Placeholder</div>
+        <div class="graph">Target Placeholder</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('dark-mode-toggle-btn');
+    const body = document.body;
+    const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.querySelector('.main-content');
+
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      sidebar.classList.toggle('dark-mode');
+      mainContent.classList.toggle('dark-mode');
+    });
+  </script>
+</body>
+</html>
