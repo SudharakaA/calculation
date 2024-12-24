@@ -458,6 +458,11 @@
                 doc.setLineWidth(0.5);
                 doc.line(10, 150, 200, 150);
 
+                // Add watermark
+                doc.setFontSize(50);
+                doc.setTextColor(150, 150, 150);
+                doc.text("TaxGen", 35, 200, { angle: 45, opacity: 0.5 });
+
                 doc.save("tax_calculation.pdf");
             };
         };
