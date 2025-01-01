@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAT Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            text-align: center;
+        }
+        .container h1 {
+            background-color: #0033cc;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .results {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .buttons button {
+            padding: 10px 15px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .buttons .calculate {
+            background-color: #0033cc;
+            color: white;
+        }
+        .buttons .download {
+            background-color: #4caf50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VAT Calculator</h1>
+        <div class="form-group">
+            <label for="amount">Value of Goods/Services (LKR):</label>
+            <input type="number" id="amount" placeholder="Enter value">
+        </div>
+        <div class="form-group">
+            <label for="vat-rate">Select VAT Rate:</label>
+            <select id="vat-rate">
+                <option value="0">0% (Zero Rate)</option>
+                <option value="8">8% (Prior to 01.06.2022)</option>
+                <option value="12">12% (01.06.2022 to 31.08.2022)</option>
+                <option value="15">15% (01.09.2022 to 31.12.2023)</option>
+                <option value="18">18% (From 01.01.2024)</option>
+            </select>
+        </div>
+        <div class="results">
+            <p>VAT Amount: <span id="vat-amount">0.00</span> LKR</p>
+            <p>Total Amount: <span id="total-amount">0.00</span> LKR</p>
+        </div>
+        <div class="buttons">
+            <button class="calculate" onclick="calculateVAT()">Calculate VAT</button>
+            <button class="download">Download PDF</button>
+        </div>
+    </div>
+
+    <script>
+        function calculateVAT() {
+            const amount = parseFloat(document.getElementById('amount').value) || 0;
+            const vatRate = parseFloat(document.getElementById('vat-rate').value) || 0;
+            const vatAmount = (amount * vatRate) / 100;
+            const totalAmount = amount - vatAmount;
+
+            document.getElementById('vat-amount').innerText = vatAmount.toFixed(2);
+            document.getElementById('total-amount').innerText = totalAmount.toFixed(2);
+        }
+    </script>
+</body>
+</html>
