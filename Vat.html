@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VAT Calculator</title>
+    <title>Advanced VAT Calculator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,7 +39,7 @@
             display: block;
             margin-bottom: 5px;
         }
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -64,14 +64,21 @@
             background-color: #4caf50;
             color: white;
         }
+        .buttons .reset {
+            background-color: #ff0000;
+            color: white;
+        }
+        canvas {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>VAT Calculator</h1>
+    <div class="container" id="vatContainer">
+        <h1>Advanced VAT Calculator</h1>
         <div class="form-group">
             <label for="amount">Value of Goods/Services (LKR):</label>
-            <input type="number" id="amount" placeholder="Enter value">
+            <input type="number" id="amount" placeholder="Enter value" min="0">
         </div>
         <div class="form-group">
             <label for="vat-rate">Select VAT Rate:</label>
@@ -83,25 +90,79 @@
                 <option value="18">18% (From 01.01.2024)</option>
             </select>
         </div>
+        <div class="form-group">
+            <label for="notes">Custom Notes (Optional):</label>
+            <textarea id="notes" placeholder="Add any additional details"></textarea>
+        </div>
         <div class="results">
             <p>VAT Amount: <span id="vat-amount">0.00</span> LKR</p>
             <p>Total Amount: <span id="total-amount">0.00</span> LKR</p>
         </div>
+        <canvas id="vatChart" width="400" height="200"></canvas>
         <div class="buttons">
             <button class="calculate" onclick="calculateVAT()">Calculate VAT</button>
-            <button class="download">Download PDF</button>
+            <button class="download" onclick="downloadPDF()">Download PDF</button>
+            <button class="reset" onclick="resetCalculator()">Reset</button>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        let chart;
+
         function calculateVAT() {
             const amount = parseFloat(document.getElementById('amount').value) || 0;
             const vatRate = parseFloat(document.getElementById('vat-rate').value) || 0;
+
+            if (amount < 0) {
+                alert("Please enter a valid positive amount.");
+                return;
+            }
+
             const vatAmount = (amount * vatRate) / 100;
-            const totalAmount = amount - vatAmount;
+            const totalAmount = amount + vatAmount;
 
             document.getElementById('vat-amount').innerText = vatAmount.toFixed(2);
             document.getElementById('total-amount').innerText = totalAmount.toFixed(2);
+
+            // Update Chart
+            if (chart) chart.destroy();
+            const ctx = document.getElementById('vatChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Goods/Services', 'VAT Amount'],
+                    datasets: [{
+                        data: [amount, vatAmount],
+                        backgroundColor: ['#0033cc', '#4caf50']
+                    }]
+                }
+            });
+        }
+
+        function resetCalculator() {
+            document.getElementById('amount').value = '';
+            document.getElementById('vat-rate').value = '0';
+            document.getElementById('notes').value = '';
+            document.getElementById('vat-amount').innerText = '0.00';
+            document.getElementById('total-amount').innerText = '0.00';
+            if (chart) chart.destroy();
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('vatContainer');
+
+            html2canvas(element, { scale: 2 }).then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('Advanced_VAT_Calculator.pdf');
+            });
         }
     </script>
 </body>
