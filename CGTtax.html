@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capital Gain Tax Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .results {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        canvas {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+        .buttons button {
+            padding: 10px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+        .calculate {
+            background-color: #007bff;
+        }
+        .download {
+            background-color: #28a745;
+        }
+        .reset {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Capital Gain Tax Calculator</h1>
+        <div class="form-group">
+            <label for="consideration">Consideration Received (LKR):</label>
+            <input type="number" id="consideration" placeholder="Enter amount" min="0">
+        </div>
+        <div class="form-group">
+            <label for="cost">Cost of Investment Asset (LKR):</label>
+            <input type="number" id="cost" placeholder="Enter amount" min="0">
+        </div>
+        <div class="form-group">
+            <label for="exempted">Exempted Amount (LKR):</label>
+            <input type="number" id="exempted" placeholder="E.g., Rs. 50,000 or Rs. 600,000 (Yearly)">
+        </div>
+        <div class="results">
+            <p>Capital Gain: <span id="capital-gain">0.00</span> LKR</p>
+            <p>Capital Gain Tax (10%): <span id="capital-gain-tax">0.00</span> LKR</p>
+        </div>
+        <canvas id="cgtChart"></canvas>
+        <div class="buttons">
+            <button class="calculate" onclick="calculateCGT()">Calculate</button>
+            <button class="download" onclick="downloadPDF()">Download PDF</button>
+            <button class="reset" onclick="resetCalculator()">Reset</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let cgtChart = null;
+
+        function calculateCGT() {
+            const consideration = parseFloat(document.getElementById("consideration").value) || 0;
+            const cost = parseFloat(document.getElementById("cost").value) || 0;
+            const exempted = parseFloat(document.getElementById("exempted").value) || 0;
+
+            if (consideration <= 0 || cost < 0) {
+                alert("Please enter valid positive amounts for consideration and cost.");
+                return;
+            }
+
+            // Calculate Capital Gain
+            let capitalGain = consideration - cost;
+
+            if (capitalGain <= exempted) {
+                capitalGain = 0;
+            } else {
+                capitalGain -= exempted;
+            }
+
+            const cgt = capitalGain * 0.10; // CGT at 10%
+
+            // Update Results
+            document.getElementById("capital-gain").innerText = capitalGain.toFixed(2);
+            document.getElementById("capital-gain-tax").innerText = cgt.toFixed(2);
+
+            // Update Chart
+            updateChart(capitalGain, cgt);
+        }
+
+        function updateChart(capitalGain, cgt) {
+            const ctx = document.getElementById("cgtChart").getContext("2d");
+
+            if (cgtChart) {
+                cgtChart.destroy(); // Clear previous chart
+            }
+
+            cgtChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: ["Capital Gain", "Capital Gain Tax"],
+                    datasets: [{
+                        label: "LKR Amount",
+                        data: [capitalGain, cgt],
+                        backgroundColor: [
+                            "rgba(54, 162, 235, 0.6)",
+                            "rgba(255, 99, 132, 0.6)"
+                        ],
+                        borderColor: [
+                            "rgba(54, 162, 235, 1)",
+                            "rgba(255, 99, 132, 1)"
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: "Capital Gain vs Capital Gain Tax"
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Amount (LKR)"
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function resetCalculator() {
+            document.getElementById("consideration").value = "";
+            document.getElementById("cost").value = "";
+            document.getElementById("exempted").value = "";
+            document.getElementById("capital-gain").innerText = "0.00";
+            document.getElementById("capital-gain-tax").innerText = "0.00";
+
+            if (cgtChart) {
+                cgtChart.destroy(); // Reset the chart
+            }
+        }
+
+        function downloadPDF() {
+            const container = document.querySelector(".container");
+
+            html2canvas(container, { scale: 2 }).then((canvas) => {
+                const imgData = canvas.toDataURL("image/png");
+                const pdf = new jspdf.jsPDF("p", "mm", "a4");
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+                pdf.save("Capital_Gain_Tax_Calculation.pdf");
+            });
+        }
+    </script>
+</body>
+</html>
