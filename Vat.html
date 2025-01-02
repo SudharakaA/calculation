@@ -122,7 +122,7 @@
             }
 
             const vatAmount = (amount * vatRate) / 100;
-            const totalAmount = amount + vatAmount;
+            const totalAmount = amount - vatAmount;
 
             document.getElementById('vat-amount').innerText = vatAmount.toFixed(2);
             document.getElementById('total-amount').innerText = totalAmount.toFixed(2);
