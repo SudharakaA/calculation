@@ -216,6 +216,19 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        .log-viewer {
+            margin-top: 20px;
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .log-viewer pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
     </style>
     <!-- Include jsPDF library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
@@ -317,6 +330,11 @@
                 <a id="download-link">Download: Check Other Industry Taxation Rates</a>
             </div>
             <div id="tax-result" style="margin-top: 20px; font-weight: bold;"></div>
+        </div>
+
+        <div class="log-viewer">
+            <h2>Log Viewer</h2>
+            <pre id="log-content">Loading logs...</pre>
         </div>
     </div>
 
@@ -480,7 +498,22 @@
             inputs.forEach(input => {
                 input.addEventListener('keydown', restrictNumericInput);
             });
+
+            loadLogFile();
         };
+
+        // Function to load log file
+        function loadLogFile() {
+            fetch('logs/taxcal.log')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('log-content').textContent = data;
+                })
+                .catch(error => {
+                    document.getElementById('log-content').textContent = 'Failed to load log file.';
+                    console.error('Error loading log file:', error);
+                });
+        }
     </script>
 </body>
 </html>

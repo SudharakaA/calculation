@@ -64,6 +64,18 @@
         .reset {
             background-color: #dc3545;
         }
+        .log-viewer {
+            margin-top: 20px;
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .log-viewer pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 <body>
@@ -90,6 +102,10 @@
             <button class="calculate" onclick="calculateCGT()">Calculate</button>
             <button class="download" onclick="downloadPDF()">Download PDF</button>
             <button class="reset" onclick="resetCalculator()">Reset</button>
+        </div>
+        <div class="log-viewer">
+            <h2>Log Viewer</h2>
+            <pre id="log-content">Loading logs...</pre>
         </div>
     </div>
 
@@ -202,6 +218,24 @@
                 pdf.save("Capital_Gain_Tax_Calculation.pdf");
             });
         }
+
+        // Function to load log file
+        function loadLogFile() {
+            fetch('logs/logfile.log')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('log-content').textContent = data;
+                })
+                .catch(error => {
+                    document.getElementById('log-content').textContent = 'Failed to load log file.';
+                    console.error('Error loading log file:', error);
+                });
+        }
+
+        // Load log file on page load
+        window.onload = function() {
+            loadLogFile();
+        };
     </script>
 </body>
 </html>
