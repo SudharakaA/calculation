@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Gateway</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #E0E0E0;
+        }
+
+        /* Top Header */
+        .header {
+            background-color: #131839;
+            color: white;
+            padding: 10px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .menu {
+            display: flex;
+            gap: 20px;
+        }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        .menu a:hover {
+            color: #A0A0FF;
+        }
+
+        /* Container Layout */
+        .container {
+            display: flex;
+            margin: 50px auto;
+            max-width: 900px;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        /* Left Section */
+        .left-section {
+            background-color: #d1e3ff;
+            padding: 40px;
+            flex: 1;
+        }
+        .left-section h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: #333;
+        }
+        .left-section p {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .left-section .total {
+            margin-top: 30px;
+            border-top: 1px solid #aaa;
+            padding-top: 10px;
+        }
+
+        /* Right Section */
+        .right-section {
+            padding: 40px;
+            flex: 2;
+            background-color: white;
+        }
+        .right-section h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #1b6ec2;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background-color: #145697;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #131839;
+            color: white;
+            padding: 20px 40px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .card-logo {
+            display: block;
+            margin: 0 auto 15px;
+            width: 60px;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+        .card-logo.show {
+            transform: scale(1.1);
+        }
+
+        .qr-code {
+            display: block;
+            margin: 20px auto;
+            width: 150px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>TaxGen</h1>
+        <nav class="menu">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Calculate</a>
+            <a href="#">Services</a>
+            <a href="#">Contact Us</a>
+        </nav>
+    </div>
+
+    <!-- Content -->
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <h2>Subscribe to TAXGEN PLUS Subscription</h2>
+            <p>RS 4000.00</p>
+            <div class="total">
+                <p>Sub Total<span style="float: right;">RS 4000.00</span></p>
+                <p>Total<span style="float: right; font-weight: bold;">RS 4000.00</span></p>
+            </div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=account:4135410012575745;amount:4000" alt="QR Code" class="qr-code">
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <h2>PAYMENT</h2>
+            <form id="payment-form">
+                <label for="email">Contact Information</label>
+                <input type="email" id="email" placeholder="Enter Your Email" required>
+
+                <label for="card-number">Card Information</label>
+                <img src="" alt="Card Logo" id="card-logo" class="card-logo" style="display: none;">
+                <input type="text" id="card-number" placeholder="1234 1234 1234 1234">
+                <input type="text" id="expiry" placeholder="MM/YY" style="width: 48%; display: inline-block;">
+                <input type="text" id="cvc" placeholder="CVC" style="width: 48%; display: inline-block; float: right;">
+
+                <label for="name">Card Holder Name</label>
+                <input type="text" id="name" placeholder="Enter Your Name">
+
+                <label for="billing">Billing Address</label>
+                <select id="billing">
+                    <option>Select Country</option>
+                    <option>Sri Lanka</option>
+                    <option>India</option>
+                    <option>USA</option>
+                </select>
+                <input type="text" placeholder="Address line 1">
+                <input type="text" placeholder="Address line 2">
+                <input type="text" placeholder="City">
+                <input type="text" placeholder="Postal Code">
+
+                <label for="payment-slip">Upload Payment Slip</label>
+                <input type="file" id="payment-slip" accept="image/*,application/pdf">
+
+                <button type="submit">Submit Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        TaxGen © 2024. All Rights Reserved. | Designed for Innovation in Tax Management Solutions.
+    </div>
+
+    <script>
+        const cardNumberInput = document.getElementById('card-number');
+        const cardLogo = document.getElementById('card-logo');
+        const paymentForm = document.getElementById('payment-form');
+
+        cardNumberInput.addEventListener('input', function() {
+            const cardNumber = cardNumberInput.value.replace(/\s+/g, '');
+            let cardType = '';
+
+            if (/^4/.test(cardNumber)) {
+                cardType = 'visa';
+            } else if (/^5[1-5]/.test(cardNumber)) {
+                cardType = 'mastercard';
+            } else if (/^3[47]/.test(cardNumber)) {
+                cardType = 'amex';
+            } else {
+                cardLogo.src = '';
+                cardLogo.style.display = 'none';
+                cardLogo.classList.remove('show');
+                return;
+            }
+
+            const cardLogos = {
+                visa: 'https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png',
+                mastercard: 'https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg',
+                amex: 'https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo.svg'
+            };
+
+            cardLogo.src = cardLogos[cardType];
+            cardLogo.onerror = function() {
+                cardLogo.style.display = 'none';
+                cardLogo.classList.remove('show');
+            };
+            cardLogo.onload = function() {
+                cardLogo.style.display = 'block';
+                cardLogo.classList.add('show');
+            };
+        });
+
+        paymentForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const cardNumber = document.getElementById('card-number').value;
+            const paymentSlip = document.getElementById('payment-slip').files[0];
+
+            if (!email) {
+                alert('Please enter your email address.');
+                return;
+            }
+
+            if (!cardNumber && !paymentSlip) {
+                alert('Please enter your card information or upload a payment slip.');
+                return;
+            }
+
+            if (paymentSlip) {
+                alert('Payment of RS 4000.00 will be processed to account number 4135410012575745. Payment slip uploaded.');
+            } else {
+                alert('Payment of RS 4000.00 will be processed to account number 4135410012575745.');
+            }
+        });
+    </script>
+</body>
+</html>
